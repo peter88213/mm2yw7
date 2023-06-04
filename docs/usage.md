@@ -127,15 +127,15 @@ This is the configuration explained:
 ```
 [SETTINGS]
 
-location_color = 0.0 0.0 1.0
+locations_icon = 0.0 0.0 1.0
 
 # RGB text color that marks the locations in Scapple.
 
-item_color = 0.0 0.5 0.0
+items_icon = 0.0 0.5 0.0
 
 # RGB text color that marks the items in Scapple.
 
-major_chara_color = 1.0 0.0 0.0
+characters_icon = 1.0 0.0 0.0
 
 # RGB text color that marks the major racters in Scapple.
 

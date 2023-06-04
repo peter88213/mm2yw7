@@ -1,4 +1,4 @@
-"""Provide a class for Scapple file representation.
+"""Provide a class for FreeMind file representation.
 
 Copyright (c) 2022 Peter Triesberger
 For further information see https://github.com/peter88213/aeon2yw
@@ -31,21 +31,19 @@ class MmFile(Yw7File):
             filePath -- str: path to the file represented by the Novel instance.
             
         Required keyword arguments:
-            location_color -- str: RGB text color that marks the locations in Scapple.
-            item_color -- str: RGB text color that marks the items in Scapple.
-            major_chara_color -- str: RGB text color that marks the major racters in Scapple.
-            minor_chara_color -- str: RGB text color that marks the minor characters in Scapple.
-            export_scenes -- bool: if True, create scenes from Scapple notes.
-            export_characters -- bool: if True, create characters from Scapple notes.
-            export_locations -- bool: if True, create location from Scapple notes. 
-            export_items -- bool: if True, create items from Scapple notes. 
+            locations_icon -- str: Icon that marks the locations in FreeMind.
+            items_icon -- str: Icon that marks the items in FreeMind.
+            characters_icon -- str: Icon that marks the major racters in FreeMind.
+            export_scenes -- bool: if True, create scenes from FreeMind notes.
+            export_characters -- bool: if True, create characters from FreeMind notes.
+            export_locations -- bool: if True, create location from FreeMind notes. 
+            export_items -- bool: if True, create items from FreeMind notes. 
         
         Extends the superclass constructor.
         """
-        MmNode.locationColor = kwargs['location_color']
-        MmNode.itemColor = kwargs['item_color']
-        MmNode.majorCharaColor = kwargs['major_chara_color']
-        MmNode.minorCharaColor = kwargs['minor_chara_color']
+        MmNode.locationIcon = kwargs['locations_icon']
+        MmNode.itemIcon = kwargs['items_icon']
+        MmNode.characterIcon = kwargs['characters_icon']
         super().__init__(filePath, **kwargs)
         self._exportScenes = kwargs['export_scenes']
         self._exportCharacters = kwargs['export_characters']
@@ -53,9 +51,9 @@ class MmFile(Yw7File):
         self._exportItems = kwargs['export_items']
 
     def read(self):
-        """Parse the Scapple xml file, fetching the Novel attributes.
+        """Parse the FreeMind xml file, fetching the Novel attributes.
         
-        Create an object structure of Scapple notes.
+        Create an object structure of FreeMind notes.
         Return a message beginning with the ERROR constant in case of error.
         Overrides the superclass method.
         """
@@ -71,52 +69,44 @@ class MmFile(Yw7File):
         self.chapters[chId].title = 'Chapter 1'
         self.srtChapters = [chId]
 
-        #--- Parse Scapple notes.
-        scapNotes = {}
+        #--- Parse FreeMind notes.
+        mmNodes = {}
         uidByPos = {}
-        for xmlNote in root.iter('Note'):
-            note = MmNode()
-            note.parse_xml(xmlNote)
-            scapNotes[note.uid] = note
-            uidByPos[note.position] = note.uid
+        for xmlNode in root.iter('node'):
+            node = MmNode()
+            node.parse_xml(xmlNode)
+            mmNodes[node.uid] = node
+            uidByPos[node.position] = node.uid
 
             # Create Novel elements.
-            if note.isScene:
+            if node.isScene:
                 if self._exportScenes:
                     scene = Scene()
-                    scene.title = note.text
-                    scene.isNotesScene = note.isNotesScene
+                    scene.title = node.text
+                    scene.isNotesScene = node.isNotesScene
                     scene.status = 1
                     # Status = Outline
-                    self.scenes[note.uid] = scene
-            elif note.isMajorChara:
+                    self.scenes[node.uid] = scene
+            elif node.isCharacter:
                 if self._exportCharacters:
                     character = Character()
-                    character.title = note.text
-                    character.fullName = note.text
+                    character.title = node.text
+                    character.fullName = node.text
                     character.isMajor = True
-                    self.characters[note.uid] = character
-                    self.srtCharacters.append(note.uid)
-            elif note.isMinorChara:
-                if self._exportCharacters:
-                    character = Character()
-                    character.title = note.text
-                    character.fullName = note.text
-                    character.isMajor = False
-                    self.characters[note.uid] = character
-                    self.srtCharacters.append(note.uid)
-            elif note.isLocation:
+                    self.characters[node.uid] = character
+                    self.srtCharacters.append(node.uid)
+            elif node.isLocation:
                 if self._exportLocations:
                     location = WorldElement()
-                    location.title = note.text
-                    self.locations[note.uid] = location
-                    self.srtLocations.append(note.uid)
-            elif note.isItem:
+                    location.title = node.text
+                    self.locations[node.uid] = location
+                    self.srtLocations.append(node.uid)
+            elif node.isItem:
                 if self._exportItems:
                     item = WorldElement()
-                    item.title = note.text
-                    self.items[note.uid] = item
-                    self.srtItems.append(note.uid)
+                    item.title = node.text
+                    self.items[node.uid] = item
+                    self.srtItems.append(node.uid)
 
         #--- Sort notes by position.
         srtNotes = sorted(uidByPos.items())
@@ -131,9 +121,9 @@ class MmFile(Yw7File):
             self.scenes[scId].items = []
             self.scenes[scId].tags = []
             self.scenes[scId].sceneNotes = ''
-            for uid in scapNotes[scId].connections:
+            for uid in mmNodes[scId].connections:
                 if uid in self.characters:
-                    if scId in scapNotes[uid].pointTo:
+                    if scId in mmNodes[uid].pointTo:
                         self.scenes[scId].characters.insert(0, uid)
                     else:
                         self.scenes[scId].characters.append(uid)
@@ -141,32 +131,32 @@ class MmFile(Yw7File):
                     self.scenes[scId].locations.append(uid)
                 elif uid in self.items:
                     self.scenes[scId].items.append(uid)
-                elif scapNotes[uid].isTag:
-                    self.scenes[scId].tags.append(scapNotes[uid].text)
-                elif scapNotes[uid].isNote:
-                    self.scenes[scId].sceneNotes = f'{self.scenes[scId].sceneNotes}{scapNotes[uid].text}'
+                elif mmNodes[uid].isTag:
+                    self.scenes[scId].tags.append(mmNodes[uid].text)
+                elif mmNodes[uid].isNote:
+                    self.scenes[scId].sceneNotes = f'{self.scenes[scId].sceneNotes}{mmNodes[uid].text}'
 
         #--- Assign tags/notes to the characters.
         for crId in self.characters:
             self.characters[crId].tags = []
             self.characters[crId].notes = ''
-            for uid in scapNotes[crId].connections:
-                if scapNotes[uid].isTag:
-                    self.characters[crId].tags.append(scapNotes[uid].text)
-                elif scapNotes[uid].isNote:
-                    self.characters[crId].notes = f'{self.characters[crId].notes}{scapNotes[uid].text}'
+            for uid in mmNodes[crId].connections:
+                if mmNodes[uid].isTag:
+                    self.characters[crId].tags.append(mmNodes[uid].text)
+                elif mmNodes[uid].isNote:
+                    self.characters[crId].notes = f'{self.characters[crId].notes}{mmNodes[uid].text}'
 
         #--- Assign tags to the locations.
         for lcId in self.locations:
             self.locations[lcId].tags = []
-            for uid in scapNotes[lcId].connections:
-                if scapNotes[uid].isTag:
-                    self.locations[lcId].tags.append(scapNotes[uid].text)
+            for uid in mmNodes[lcId].connections:
+                if mmNodes[uid].isTag:
+                    self.locations[lcId].tags.append(mmNodes[uid].text)
 
         #--- Assign tags to the items.
         for itId in self.items:
             self.items[itId].tags = []
-            for uid in scapNotes[itId].connections:
-                if scapNotes[uid].isTag:
-                    self.items[itId].tags.append(scapNotes[uid].text)
-        return 'Scapple data converted to novel structure.'
+            for uid in mmNodes[itId].connections:
+                if mmNodes[uid].isTag:
+                    self.items[itId].tags.append(mmNodes[uid].text)
+        return 'Mindmap converted to novel structure.'

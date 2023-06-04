@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<YWRITER7>
+  <PROJECT>
+    <Ver>7</Ver>
+  </PROJECT>
+  <LOCATIONS />
+  <ITEMS />
+  <CHARACTERS />
+  <SCENES>
+    <SCENE>
+      <ID>1</ID>
+      <Title><![CDATA[Erste Szene]]></Title>
+      <BelongsToChID>2</BelongsToChID>
+      <Desc><![CDATA[Beschreibung Szene 1]]></Desc>
+      <SceneContent />
+      <WordCount>0</WordCount>
+      <LetterCount>0</LetterCount>
+      <Status>1</Status>
+    </SCENE>
+    <SCENE>
+      <ID>2</ID>
+      <Title><![CDATA[Zweite Szene]]></Title>
+      <BelongsToChID>2</BelongsToChID>
+      <Desc><![CDATA[Beschreibung Szene 2]]></Desc>
+      <SceneContent />
+      <WordCount>0</WordCount>
+      <LetterCount>0</LetterCount>
+      <Status>1</Status>
+    </SCENE>
+    <SCENE>
+      <ID>3</ID>
+      <Title><![CDATA[Dritte Szene]]></Title>
+      <BelongsToChID>2</BelongsToChID>
+      <SceneContent />
+      <WordCount>0</WordCount>
+      <LetterCount>0</LetterCount>
+      <Status>1</Status>
+    </SCENE>
+    <SCENE>
+      <ID>4</ID>
+      <Title><![CDATA[vierte Szene]]></Title>
+      <BelongsToChID>3</BelongsToChID>
+      <SceneContent />
+      <WordCount>0</WordCount>
+      <LetterCount>0</LetterCount>
+      <Status>1</Status>
+    </SCENE>
+    <SCENE>
+      <ID>5</ID>
+      <Title><![CDATA[fünfte Szene]]></Title>
+      <BelongsToChID>3</BelongsToChID>
+      <SceneContent />
+      <WordCount>0</WordCount>
+      <LetterCount>0</LetterCount>
+      <Status>1</Status>
+    </SCENE>
+    <SCENE>
+      <ID>6</ID>
+      <Title><![CDATA[Sechste Szene]]></Title>
+      <BelongsToChID>5</BelongsToChID>
+      <SceneContent />
+      <WordCount>0</WordCount>
+      <LetterCount>0</LetterCount>
+      <Status>1</Status>
+    </SCENE>
+    <SCENE>
+      <ID>7</ID>
+      <Title><![CDATA[Siebte Szene]]></Title>
+      <BelongsToChID>5</BelongsToChID>
+      <SceneContent />
+      <WordCount>0</WordCount>
+      <LetterCount>0</LetterCount>
+      <Status>1</Status>
+    </SCENE>
+    <SCENE>
+      <ID>8</ID>
+      <Title><![CDATA[Achte Szene]]></Title>
+      <BelongsToChID>5</BelongsToChID>
+      <SceneContent />
+      <WordCount>0</WordCount>
+      <LetterCount>0</LetterCount>
+      <Status>1</Status>
+    </SCENE>
+    <SCENE>
+      <ID>9</ID>
+      <Title><![CDATA[Neunte Szene]]></Title>
+      <BelongsToChID>6</BelongsToChID>
+      <SceneContent />
+      <WordCount>0</WordCount>
+      <LetterCount>0</LetterCount>
+      <Status>1</Status>
+    </SCENE>
+    <SCENE>
+      <ID>10</ID>
+      <Title><![CDATA[Zehnte Szene]]></Title>
+      <BelongsToChID>6</BelongsToChID>
+      <SceneContent />
+      <WordCount>0</WordCount>
+      <LetterCount>0</LetterCount>
+      <Status>1</Status>
+    </SCENE>
+  </SCENES>
+  <CHAPTERS>
+    <CHAPTER>
+      <ID>1</ID>
+      <Title><![CDATA[Erster Teil]]></Title>
+      <SortOrder>1</SortOrder>
+      <SectionStart>-1</SectionStart>
+      <Type>0</Type>
+      <ChapterType>0</ChapterType>
+    </CHAPTER>
+    <CHAPTER>
+      <ID>2</ID>
+      <Title><![CDATA[Erstes kapitel]]></Title>
+      <Desc><![CDATA[Beschreibung Kapitel 1]]></Desc>
+      <SortOrder>2</SortOrder>
+      <Type>0</Type>
+      <ChapterType>0</ChapterType>
+      <Scenes>
+        <ScID>1</ScID>
+        <ScID>2</ScID>
+        <ScID>3</ScID>
+      </Scenes>
+    </CHAPTER>
+    <CHAPTER>
+      <ID>3</ID>
+      <Title><![CDATA[Zweites Kapitel]]></Title>
+      <SortOrder>3</SortOrder>
+      <Type>0</Type>
+      <ChapterType>0</ChapterType>
+      <Scenes>
+        <ScID>4</ScID>
+        <ScID>5</ScID>
+      </Scenes>
+    </CHAPTER>
+    <CHAPTER>
+      <ID>4</ID>
+      <Title><![CDATA[Zweiter Teil]]></Title>
+      <Desc><![CDATA[Beschreibung Teil 2]]></Desc>
+      <SortOrder>4</SortOrder>
+      <SectionStart>-1</SectionStart>
+      <Type>0</Type>
+      <ChapterType>0</ChapterType>
+    </CHAPTER>
+    <CHAPTER>
+      <ID>5</ID>
+      <Title><![CDATA[Drittes Kapitel]]></Title>
+      <SortOrder>5</SortOrder>
+      <Type>0</Type>
+      <ChapterType>0</ChapterType>
+      <Scenes>
+        <ScID>6</ScID>
+        <ScID>7</ScID>
+        <ScID>8</ScID>
+      </Scenes>
+    </CHAPTER>
+    <CHAPTER>
+      <ID>6</ID>
+      <Title><![CDATA[Viertes Kapitel]]></Title>
+      <SortOrder>6</SortOrder>
+      <Type>0</Type>
+      <ChapterType>0</ChapterType>
+      <Scenes>
+        <ScID>9</ScID>
+        <ScID>10</ScID>
+      </Scenes>
+    </CHAPTER>
+    <CHAPTER>
+      <ID>7</ID>
+      <Title><![CDATA[Dritter Teil]]></Title>
+      <SortOrder>7</SortOrder>
+      <SectionStart>-1</SectionStart>
+      <Type>0</Type>
+      <ChapterType>0</ChapterType>
+    </CHAPTER>
+    <CHAPTER>
+      <ID>8</ID>
+      <Title><![CDATA[Fünftes kapitel]]></Title>
+      <SortOrder>8</SortOrder>
+      <Type>0</Type>
+      <ChapterType>0</ChapterType>
+    </CHAPTER>
+    <CHAPTER>
+      <ID>9</ID>
+      <Title><![CDATA[Sechstes Kapitel]]></Title>
+      <SortOrder>9</SortOrder>
+      <Type>0</Type>
+      <ChapterType>0</ChapterType>
+    </CHAPTER>
+  </CHAPTERS>
+</YWRITER7>

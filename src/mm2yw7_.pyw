@@ -16,15 +16,10 @@ from mm2yw7lib.mm_converter import MmConverter
 
 SUFFIX = ''
 APPNAME = 'mm2yw7'
-GREEN = '0.0 0.5 0.0'
-BLUE = '0.0 0.0 1.0'
-RED = '1.0 0.0 0.0'
-PURPLE = '0.5 0.0 0.5'
 SETTINGS = dict(
-    location_color=BLUE,
-    item_color=GREEN,
-    major_chara_color=RED,
-    minor_chara_color=PURPLE,
+    locations_icon='gohome',
+    items_icon='password',
+    characters_icon='group',
 )
 OPTIONS = dict(
     export_scenes=True,
@@ -38,7 +33,7 @@ def run(sourcePath, silentMode=True, installDir='.'):
     if silentMode:
         ui = Ui('')
     else:
-        ui = UiTk('FreeMind to yWriter converter @release')
+        ui = UiTk('mm to yw7 converter @release')
 
     #--- Try to get persistent configuration data
     sourceDir = os.path.dirname(sourcePath)
@@ -60,7 +55,7 @@ def run(sourcePath, silentMode=True, installDir='.'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='FreeMind to yWriter converter',
+        description='mm to yw7 converter',
         epilog='')
     parser.add_argument('sourcePath',
                         metavar='Sourcefile',

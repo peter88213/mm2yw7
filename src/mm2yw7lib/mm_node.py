@@ -38,8 +38,7 @@ class MmNode:
         self.isNotesScene = None
         self.isTag = None
         self.isNote = None
-        self.isMajorChara = None
-        self.isMinorChara = None
+        self.isCharacter = None
         self.isLocation = None
         self.isItem = None
         self.textColor = None
@@ -58,31 +57,11 @@ class MmNode:
         isScene, isTag, isNote, textColor, connections, pointTo
         """
 
-        def str_to_rgb(colorStr):
-            """Return a RGB tuple of floats for a given string."""
-            try:
-                red, green, blue = colorStr.split(' ')
-                return float(red), float(green), float(blue)
-            except(ValueError):
-                return (0.0, 0.0, 0.0)
-
-        def color_matches(color1, color2):
-            """Return True if color1 is close to textColor 2, otherwise return False."""
-            TOLERANCE = 0.1
-            c1 = str_to_rgb(color1)
-            c2 = str_to_rgb(color2)
-            for i in range(3):
-                if abs(c1[i] - c2[i]) > TOLERANCE:
-                    return False
-
-            return True
-
         self.isScene = False
         self.isNotesScene = False
         self.isTag = False
         self.isNote = False
-        self.isMajorChara = False
-        self.isMinorChara = False
+        self.isCharacter = False
         self.isLocation = False
         self.isItem = False
         self.textColor = ''
@@ -112,7 +91,7 @@ class MmNode:
         elif borderStyle == 'Cloud':
             self.isNote = True
         elif color_matches(self.textColor, self.majorCharaColor):
-            self.isMajorChara = True
+            self.isCharacter = True
         elif color_matches(self.textColor, self.minorCharaColor):
             self.isMinorChara = True
         elif color_matches(self.textColor, self.locationColor):
