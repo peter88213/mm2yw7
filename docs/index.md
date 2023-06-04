@@ -1,25 +1,14 @@
 [yWriter](http://spacejock.com/yWriter7.html) is a free word processor written by Australian author and programmer Simon Haynes. 
-[Scapple](https://www.literatureandlatte.com/scapple/overview) is a commercial free-form diagramming software for visualizing entities and relationships of all kinds. *mm2yw7* is a Python script that exports outlines made with Scapple to new yWriter projects.
+[FreeMind](https://freemind.sourceforge.net/wiki/index.php/Main_Page) is a mind mapper software. *mm2yw7* is a Python script that exports outlines made with FreeMind to new yWriter projects.
 
 ![Screenshot: Example](Screenshots/screen01.png)
 
 ## Features
 
-- Notes with a shadow are converted to scenes in one single chapter.
-- Notes with a "cloud" border and shadow are converted to "Notes" scenes.
-- Notes with a "cloud" border without shadow are converted to scene and character notes.
-- Notes with a square border are converted to tags.
-- Notes with colored text are converted to characters, locations, or items.
-- Connections between scenes and characters/locations/items are considered.
-- If a yWriter project already exists, Character/Location/Item XML files are generated instead.
-- The *mm2yw7* release includes a sample Scapple file with note styles to import.
-
  
 ## Requirements
 
 - [Python](https://www.python.org/) version 3.6+.
-- [yWriter 7](http://spacejock.com/yWriter7.html).
-- [Scapple 1.2.6](https://www.literatureandlatte.com/scapple/overview).
 
 
 ## Download and install
