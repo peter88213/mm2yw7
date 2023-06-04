@@ -1,7 +1,8 @@
 [yWriter](http://spacejock.com/yWriter7.html) is a free word processor written by Australian author and programmer Simon Haynes. 
 [FreeMind](https://freemind.sourceforge.net/wiki/index.php/Main_Page) is a mind mapper software. *mm2yw7* is a Python script that exports outlines made with FreeMind to new yWriter projects.
 
-![Screenshot: Example](Screenshots/screen01.png)
+![Screenshot: Example](Screenshots/freemind01.png)
+![Screenshot: Example](Screenshots/ywriter01.png)
 
 ## Features
 
