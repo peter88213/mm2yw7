@@ -53,8 +53,6 @@ class MmFile(File):
     def read(self):
         """Parse the FreeMind xml file, fetching the Novel attributes.
         
-        Create an object structure of FreeMind notes.
-        Return a message beginning with the ERROR constant in case of error.
         Overrides the superclass method.
         """
         try:
@@ -81,6 +79,7 @@ class MmFile(File):
                 elif xmlIcon.attrib.get('BUILTIN', '') == self._itemIcon:
                     isItemsNode = True
                     break
+
             if isCharactersNode:
                 if self._exportCharacters:
                     self._get_characters(xmlNode)
@@ -101,14 +100,6 @@ class MmFile(File):
             self.novel.characters[crId].title = xmlCharacter.attrib.get('TEXT', '')
             print(self.novel.characters[crId].title)
 
-    def _get_locations(self, xmlNode):
-        for xmlLocation in xmlNode.findall('node'):
-            lcId = create_id(self.novel.locations)
-            self.novel.locations[lcId] = WorldElement()
-            self.novel.srtLocations.append(lcId)
-            self.novel.locations[lcId].title = xmlLocation.attrib.get('TEXT', '')
-            print(self.novel.locations[lcId].title)
-
     def _get_items(self, xmlNode):
         for xmlItem in xmlNode.findall('node'):
             itId = create_id(self.novel.items)
@@ -116,6 +107,14 @@ class MmFile(File):
             self.novel.srtItems.append(itId)
             self.novel.items[itId].title = xmlItem.attrib.get('TEXT', '')
             print(self.novel.items[itId].title)
+
+    def _get_locations(self, xmlNode):
+        for xmlLocation in xmlNode.findall('node'):
+            lcId = create_id(self.novel.locations)
+            self.novel.locations[lcId] = WorldElement()
+            self.novel.srtLocations.append(lcId)
+            self.novel.locations[lcId].title = xmlLocation.attrib.get('TEXT', '')
+            print(self.novel.locations[lcId].title)
 
     def _get_part(self, xmlNode):
         chId = create_id(self.novel.chapters)
