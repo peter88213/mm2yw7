@@ -26,6 +26,7 @@ OPTIONS = dict(
     export_characters=True,
     export_locations=True,
     export_items=True,
+    overwrite_yw7=True,
 )
 
 

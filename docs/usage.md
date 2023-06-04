@@ -2,19 +2,19 @@
 
 ------------------------------------------------------------------
 
-The mm2yw7 Python script creates a yWriter 7 project from a Scapple outline.
+The mm2yw7 Python script creates a yWriter 7 project from a FreeMind outline.
 
 ## Instructions for use
 
 ### Intended usage
 
-The included installation script prompts you to create a shortcut on the desktop. You can launch the program by dragging a *scap* file and dropping it on the shortcut icon. 
+The included installation script prompts you to create a shortcut on the desktop. You can launch the program by dragging a *.mm* file and dropping it on the shortcut icon. 
 
 ### Command line usage
 
 Alternatively, you can
 
-- launch the program on the command line passing the yWriter project file as an argument, or
+- launch the program on the command line passing the mindmap file as an argument, or
 - launch the program via a batch file.
 
 usage: `mm2yw7.pyw [--silent] Sourcefile`
@@ -31,7 +31,7 @@ The path of the mindmap.
 
 ## Mode of operation
 
-*mm2yw7* generates a new yWriter project file with the same file name as the Scapple source file, 
+*mm2yw7* generates a new yWriter project file with the same file name as the mindmap file, 
 but with the extension `.yw7`. It is placed in the same directory as the source file. 
 
 However, **if the yWriter project already exists, it would not be overwritten**. Character/Location/Item 
@@ -39,64 +39,6 @@ XML files are generated instead. They can be imported into any yWriter project.
 
 ## Conversion rules
 
-- Notes with a shadow are converted to scenes. 
-- Notes with a shadow and "cloud" border are converted to "Notes" scenes. 
-- Scenes are ordered by their position in the Scapple diagram (from top left to bottom right).
-- Notes with a "cloud" border without shadow are converted to scene and character notes.
-- Notes with a square border are converted to tags.
-- Notes with red text are converted to major characters.
-- Notes with purple text are converted to minor characters.
-- Notes with blue text are converted to locations. 
-- Notes with green text are converted to items.
-- Assign characters/locations/items to a scene by connecting the corresponding notes.
-- Assign tags to scenes/characters/locations/items by connecting the corresponding notes.
-- Assign a viewpoint character to a scene by creating an arrow pointing from the character to the scene. If a scene is pointed to by several characters, or by no character, the viewpoint is random.
-
-## How to mark notes for export
-
-### Import styles (optional)
-
-The mm2yw7 distribution comes with a sample Scapple project *styles.scap* including all required styles. You can either use this diagram as a template, or import the styles into your own Scapple diagram. 
-
-![Screenshot: Import styles dialog](Screenshots/import_styles.png)
-
-In the file picker dialog, select `<unzipped mm2yw7 release folder>\sample\styles.scap`. Then you can apply the styles via context menu.
-
-![Screenshot: Apply style menu](Screenshots/apply_styles.png)
-
-### Mark scenes
-
-Either apply the "Scene" style, if any, via context menu, or tick "Shadow" in the Inspector to mark the note as scene.
-
-![Screenshot: Set note shadow](Screenshots/mark_scene.png)
-
-To make the scene a "Notes" scene, either apply the "NotesScene" style, or make its border style "Cloud" in the Inspector.
-
-### Mark notes
-
-Either apply the "Note" style, if any, via context menu, or make the note's border style "Cloud" in the Inspector.
-
-### Mark tags
-
-Either apply the "Tag" style, if any, via context menu, or make the note's border style "Square" in the Inspector.
-
-### Mark locations
-
-Either apply the "Location" style, if any, via context menu, or tick the big blue field above the text color swatch in the Inspector.
-
-![Screenshot: Set text color](Screenshots/mark_location.png)
-
-### Mark major characters
-
-Either apply the "Major character" style, if any, via context menu, or tick the big red field above the text color swatch in the Inspector.
-
-### Mark minor characters
-
-Either apply the "Minor character" style, if any, via context menu, or tick the big purple field above the text color swatch in the Inspector.
-
-### Mark items
-
-Either apply the "Item" style, if any, via context menu, or tick the big green field above the text color swatch in the Inspector.
 
 
 ## Custom configuration
@@ -118,7 +60,7 @@ An optional project configuration file named `mm2yw7.ini` can be placed in your 
 
 The mm2yw7 distribution comes with a sample configuration file located in the `sample` subfolder. It contains mm2yw7's default settings and options. This file is also automatically copied to the global configuration folder during installation. You best make a copy and edit it.
 
-- The SETTINGS section mainly refers to colors, i.e. The text colors that mark the characters/locations/items in Scapple. If you change them, the program might behave differently than described in the description of the conversion rules below. 
+- The SETTINGS section mainly refers to icons, i.e. The FreeMind icons that mark the character/location/item branches in the mindmap. If you change them, the program might behave differently than described in the description of the conversion rules. 
 - The OPTIONS section comprises options for regular program execution. 
 - Comment lines begin with a `#` number sign. In the example, they refer to the code line immediately above.
 
@@ -127,39 +69,40 @@ This is the configuration explained:
 ```
 [SETTINGS]
 
-locations_icon = 0.0 0.0 1.0
+locations_icon = gohome
 
-# RGB text color that marks the locations in Scapple.
+# Icon that marks the location branch in the mindmap.
 
-items_icon = 0.0 0.5 0.0
+items_icon = password
 
-# RGB text color that marks the items in Scapple.
+# Icon that marks the item branch in the mindmap.
 
-characters_icon = 1.0 0.0 0.0
+characters_icon = group
 
-# RGB text color that marks the major racters in Scapple.
-
-minor_chara_color = 0.5 0.0 0.5
-
-# RGB text color that marks the minor characters in Scapple.
+# Icon that marks the character branch in the mindmap.
 
 [OPTIONS]
 
 export_scenes = Yes
 
-# Yes: create scenes from Scapple notes.
+# Yes: create scenes from the mindmap.
 
 export_characters = Yes
 
-# Yes: create characters from Scapple notes.
+# Yes: create characters from the mindmap.
 
 export_locations = Yes
 
-# Yes: create location from Scapple notes.
+# Yes: create location from the mindmap.
 
 export_items = Yes
 
-# Yes: create items from Scapple notes.```
+# Yes: create items from the mindmap.
+
+overwrite_yw7 = Yes
+
+# Yes: overwrite existing yw7 project after confirmation.
+# No: if the yw7 project exists, create XML charcter/location/item data files instead.
 
 ```
 

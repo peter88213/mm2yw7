@@ -39,9 +39,16 @@ class MmConverter(YwCnvUi):
 
         if fileExtension == MmFile.EXTENSION:
             source = MmFile(sourcePath, **kwargs)
-            target = Yw7File(f'{fileName}{Yw7File.EXTENSION}', **kwargs)
-            self.ui.set_info_what(
-                _('Create a yWriter project file from {0}\nNew project: "{1}"').format(source.DESCRIPTION, norm_path(target.filePath)))
+            if os.path.isfile(f'{fileName}{Yw7File.EXTENSION}') and not kwargs['overwrite_yw7']:
+                target = DataFiles(f'{fileName}{DataFiles.EXTENSION}', **kwargs)
+                self.ui.set_info_what(
+                    _('Create yWriter XML data files from {0}').format(source.DESCRIPTION, norm_path(target.filePath)))
+                createProject = False
+            else:
+                target = Yw7File(f'{fileName}{Yw7File.EXTENSION}', **kwargs)
+                self.ui.set_info_what(
+                    _('Create a yWriter project file from {0}\nNew project: "{1}"').format(source.DESCRIPTION, norm_path(target.filePath)))
+                createProject = True
             try:
                 self.check(source, target)
                 source.novel = Novel()
@@ -52,17 +59,12 @@ class MmConverter(YwCnvUi):
                 message = f'!{str(ex)}'
                 self.newFile = None
             else:
-                message = f'{_("File written")}: "{norm_path(target.filePath)}".'
+                if createProject:
+                    message = f'{_("File written")}: "{norm_path(target.filePath)}".'
+                else:
+                    message = _('XML data files written.')
                 self.newFile = target.filePath
             finally:
                 self.ui.set_info_how(message)
-            return
-
-            if os.path.isfile(f'{fileName}{Yw7File.EXTENSION}'):
-                target = DataFiles(f'{fileName}{DataFiles.EXTENSION}', **kwargs)
-                self.import_to_yw(sourceFile, target)
-            else:
-                target = Yw7File(f'{fileName}{Yw7File.EXTENSION}', **kwargs)
-                self.create_yw7(sourceFile, target)
         else:
             self.ui.set_info_how(f'{ERROR}File type of "{os.path.normpath(sourcePath)}" not supported.')
