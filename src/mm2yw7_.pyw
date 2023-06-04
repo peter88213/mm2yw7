@@ -20,6 +20,8 @@ SETTINGS = dict(
     locations_icon='gohome',
     items_icon='password',
     characters_icon='group',
+    notes_icon='info',
+    todo_icon='list',
 )
 OPTIONS = dict(
     export_scenes=True,
