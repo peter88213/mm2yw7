@@ -3,7 +3,6 @@
 	<name>mm2yw7</name>
 	<comment></comment>
 	<projects>
-		<project>PyWriter</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

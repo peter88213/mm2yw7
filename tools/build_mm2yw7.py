@@ -18,10 +18,10 @@ TARGET_FILE = f'{BUILD}mm2yw7.pyw'
 
 
 def main():
-    inliner.run(SOURCE_FILE, TARGET_FILE, 'mm2yw7lib', '../src/', copyPyWriter=False)
-    inliner.run(TARGET_FILE, TARGET_FILE, 'pywriter', '../../PyWriter/src/', copyPyWriter=False)
-    # inliner.run(SOURCE_FILE, TARGET_FILE, 'mm2yw7lib', '../src/')
-    # inliner.run(TARGET_FILE, TARGET_FILE, 'pywriter', '../src/')
+    # inliner.run(SOURCE_FILE, TARGET_FILE, 'mm2yw7lib', '../src/', copyPyWriter=True)
+    # inliner.run(TARGET_FILE, TARGET_FILE, 'pywriter', '../../PyWriter/src/', copyPyWriter=True)
+    inliner.run(SOURCE_FILE, TARGET_FILE, 'mm2yw7lib', '../src/')
+    inliner.run(TARGET_FILE, TARGET_FILE, 'pywriter', '../src/')
     print('Done.')
 
 
