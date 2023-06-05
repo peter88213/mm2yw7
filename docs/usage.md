@@ -52,7 +52,8 @@ XML files are generated instead. They can be imported into any yWriter project.
 ### The levels of the mindmap tree
 
 - On the first level, a node represents either a *part* (a chapter beginning a new section), 
-  or a collection of characters, locations, or items.
+  or a collection of characters, locations, or items. The conversion of "Normal type parts" 
+  can be suppressed with a configuration file entry, if you just want chapters and scenes. 
 - On the second level, a node represents either a *chapter*, or a character/location/item. 
 - On the third level. a node represents a *scene*. 
 
@@ -64,15 +65,25 @@ can be changed with a configuration file (see below).
 
 #### On the first level
 
-- ![Main characters icon](Screenshots/icon_main_characters.png) This icon marks the *Main characters* branch.
-- ![Minor characters icon](Screenshots/icon_minor_characters.png) This icon marks the *Minor characters* branch.
-- ![Locations icon](Screenshots/icon_locations.png) This icon marks the *Locations* branch.
-- ![Items icon](Screenshots/icon_items.png) This icon marks the *Items* branch.
+This icon marks the *Main characters* branch: 
+![Main characters icon](Screenshots/icon_main_characters.png) 
+
+This icon marks the *Minor characters* branch: 
+![Minor characters icon](Screenshots/icon_minor_characters.png)
+
+This icon marks the *Locations* branch: 
+![Locations icon](Screenshots/icon_locations.png)
+
+This icon marks the *Items* branch: 
+![Items icon](Screenshots/icon_items.png)
 
 #### On the first, second, or third level
 
-- ![Notes icon](Screenshots/icon_notes.png) This icon makes a node and its children (if any) *Notes* type.
-- ![Todo icon](Screenshots/icon_todo.png) This icon makes a node and its children (if any) *Todo* type.
+This icon makes a node element and its children (if any) *Notes* type: 
+![Notes icon](Screenshots/icon_notes.png)
+
+This icon makes a node element and its children (if any) *Todo* type:
+![Todo icon](Screenshots/icon_todo.png)
 
 ### Example mindmap
 
