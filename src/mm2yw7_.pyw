@@ -19,7 +19,8 @@ APPNAME = 'mm2yw7'
 SETTINGS = dict(
     locations_icon='gohome',
     items_icon='password',
-    characters_icon='group',
+    main_characters_icon='full-1',
+    minor_characters_icon='full-2',
     notes_icon='info',
     todo_icon='list',
 )
@@ -29,6 +30,7 @@ OPTIONS = dict(
     export_locations=True,
     export_items=True,
     overwrite_yw7=True,
+    has_normal_parts=True,
 )
 
 

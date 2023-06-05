@@ -81,6 +81,14 @@ characters_icon = group
 
 # Icon that marks the character branch in the mindmap.
 
+notes_icon = info
+
+# Icon that marks a "Notes" type part/chapter/scene.
+
+todo_icon = list
+
+# Icon that marks a "To do" type part/chapter/scene.
+
 [OPTIONS]
 
 export_scenes = Yes
@@ -102,7 +110,12 @@ export_items = Yes
 overwrite_yw7 = Yes
 
 # Yes: overwrite existing yw7 project after confirmation.
-# No: if the yw7 project exists, create XML charcter/location/item data files instead.
+# No: if the yw7 project exists, create XML character/location/item data files instead.
+
+has_normal_parts = Yes
+
+# Yes: Create parts from all first level nodes that contain chapters and scenes.
+# No: Create parts from the first level nodes only if marked as "Notes" or "To do".
 
 ```
 

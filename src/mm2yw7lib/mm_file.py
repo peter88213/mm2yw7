@@ -42,15 +42,17 @@ class MmFile(File):
         Extends the superclass constructor.
         """
         super().__init__(filePath, **kwargs)
-        self._locationIcon = kwargs['locations_icon']
-        self._itemIcon = kwargs['items_icon']
-        self._characterIcon = kwargs['characters_icon']
+        self._locationsIcon = kwargs['locations_icon']
+        self._itemsIcon = kwargs['items_icon']
+        self._mainCharactersIcon = kwargs['main_characters_icon']
+        self._minorCharactersIcon = kwargs['minor_characters_icon']
         self._notesIcon = kwargs['notes_icon']
         self._todoIcon = kwargs['todo_icon']
         self._exportScenes = kwargs['export_scenes']
         self._exportCharacters = kwargs['export_characters']
         self._exportLocations = kwargs['export_locations']
         self._exportItems = kwargs['export_items']
+        self._hasNormalParts = kwargs['has_normal_parts']
 
     def read(self):
         """Parse the FreeMind xml file, fetching the Novel attributes.
@@ -67,25 +69,33 @@ class MmFile(File):
         self.novel.title = self._get_title(xmlNovel)
         self.novel.desc = self._get_desc(xmlNovel)
         for xmlNode in xmlNovel.findall('node'):
-            isCharactersNode = False
+            isMainCharactersNode = False
+            isMinorCharactersNode = False
             isLocationsNode = False
             isItemsNode = False
             for xmlIcon in xmlNode.findall('icon'):
-                if xmlIcon.attrib.get('BUILTIN', '') == self._characterIcon:
-                    isCharactersNode = True
+                if xmlIcon.attrib.get('BUILTIN', '') == self._mainCharactersIcon:
+                    isMainCharactersNode = True
                     break
 
-                elif xmlIcon.attrib.get('BUILTIN', '') == self._locationIcon:
+                if xmlIcon.attrib.get('BUILTIN', '') == self._minorCharactersIcon:
+                    isMinorCharactersNode = True
+                    break
+
+                elif xmlIcon.attrib.get('BUILTIN', '') == self._locationsIcon:
                     isLocationsNode = True
                     break
 
-                elif xmlIcon.attrib.get('BUILTIN', '') == self._itemIcon:
+                elif xmlIcon.attrib.get('BUILTIN', '') == self._itemsIcon:
                     isItemsNode = True
                     break
 
-            if isCharactersNode:
+            if isMainCharactersNode:
                 if self._exportCharacters:
-                    self._get_characters(xmlNode)
+                    self._get_characters(xmlNode, True)
+            elif isMinorCharactersNode:
+                if self._exportCharacters:
+                    self._get_characters(xmlNode, False)
             elif isLocationsNode:
                 if self._exportLocations:
                     self._get_locations(xmlNode)
@@ -95,13 +105,14 @@ class MmFile(File):
             elif self._exportScenes:
                 self._get_part(xmlNode)
 
-    def _get_characters(self, xmlNode):
+    def _get_characters(self, xmlNode, isMajor):
         for xmlCharacter in xmlNode.findall('node'):
             crId = create_id(self.novel.characters)
             self.novel.characters[crId] = Character()
             self.novel.srtCharacters.append(crId)
             self.novel.characters[crId].title = self._get_title(xmlCharacter)
             self.novel.characters[crId].desc = self._get_desc(xmlCharacter)
+            self.novel.characters[crId].isMajor = isMajor
 
     def _get_desc(self, xmlNode):
         desc = None
@@ -131,13 +142,18 @@ class MmFile(File):
             self.novel.locations[lcId].desc = self._get_desc(xmlLocation)
 
     def _get_part(self, xmlNode):
-        paId = create_id(self.novel.chapters)
-        self.novel.chapters[paId] = Chapter()
-        self.novel.srtChapters.append(paId)
-        self.novel.chapters[paId].chLevel = 1
-        self.novel.chapters[paId].title = self._get_title(xmlNode)
-        self.novel.chapters[paId].desc = self._get_desc(xmlNode)
-        self.novel.chapters[paId].chType = self._get_type(xmlNode)
+        partType = self._get_type(xmlNode)
+        if self._hasNormalParts or partType != 0:
+            inPart = True
+            paId = create_id(self.novel.chapters)
+            self.novel.chapters[paId] = Chapter()
+            self.novel.srtChapters.append(paId)
+            self.novel.chapters[paId].chLevel = 1
+            self.novel.chapters[paId].title = self._get_title(xmlNode)
+            self.novel.chapters[paId].desc = self._get_desc(xmlNode)
+            self.novel.chapters[paId].chType = partType
+        else:
+            partType = 0
         for xmlChapter in xmlNode.findall('node'):
             chId = create_id(self.novel.chapters)
             self.novel.chapters[chId] = Chapter()
@@ -145,10 +161,10 @@ class MmFile(File):
             self.novel.chapters[chId].chLevel = 0
             self.novel.chapters[chId].title = self._get_title(xmlChapter)
             self.novel.chapters[chId].desc = self._get_desc(xmlChapter)
-            if self.novel.chapters[paId].chType != 0:
-                self.novel.chapters[chId].chType = self.novel.chapters[paId].chType
-            else:
+            if partType == 0:
                 self.novel.chapters[chId].chType = self._get_type(xmlChapter)
+            else:
+                self.novel.chapters[chId].chType = partType
             for xmlScene in xmlChapter.findall('node'):
                 scId = create_id(self.novel.scenes)
                 self.novel.scenes[scId] = Scene()
@@ -164,10 +180,10 @@ class MmFile(File):
     def _get_title(self, xmlNode):
         title = xmlNode.attrib.get('TEXT', None)
         if title is None:
-            for xmlRichcontent in xmlNode.findall('richcontent'):
-                if xmlRichcontent.attrib.get('TYPE', '') == 'NODE':
+            for xmlRichContent in xmlNode.findall('richcontent'):
+                if xmlRichContent.attrib.get('TYPE', '') == 'NODE':
                     htmlTitle = []
-                    for htmlText in xmlRichcontent.itertext():
+                    for htmlText in xmlRichContent.itertext():
                         htmlTitle.append(htmlText)
                     title = ''.join(htmlTitle).strip()
                     break

@@ -4,6 +4,15 @@
 
 ## Changelog
 
+### v0.4.0
+
+- Make "normal" parts optional.
+- Change the Characters node icon.
+- Distinguish between main and minor characters.
+- Add a novel template to the sample folder.
+
+Based on PyWriter v12.12.0
+
 ### v0.3.0
 
 - Read HTML formatted node labels as titles.
