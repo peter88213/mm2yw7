@@ -34,7 +34,9 @@ The path of the mindmap.
 *mm2yw7* generates a new yWriter project file with the same file name as the mindmap file, 
 but with the extension `.yw7`. It is placed in the same directory as the source file. 
 
-However, **if the yWriter project already exists, it would not be overwritten**. Character/Location/Item 
+Note: **If the yWriter project already exists, it would be overwritten after confirmation**. 
+However, you can change the behavior with a configuration file entry (see below). Then 
+an existing yw7 file is not overwritten. Character/Location/Item 
 XML files are generated instead. They can be imported into any yWriter project.
 
 ## Conversion rules
@@ -60,7 +62,7 @@ XML files are generated instead. They can be imported into any yWriter project.
 ### The use of special icons
 
 The conversion is controlled by nodes decorated with special icons. The icon specifications 
-can be changed with a configuration file (see below).
+can be changed with configuration file entries (see below).
 
 
 #### On the first level
