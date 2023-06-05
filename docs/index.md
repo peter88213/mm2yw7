@@ -6,7 +6,16 @@
 
 ## Features
 
- 
+- Converts three levels of the novel structure: Parts, chapters, and scenes.
+- Converts a set of main characters.
+- Converts a set of minor characters.
+- Converts a set of locations.
+- Converts a set of items.
+- Makes the node label the title of the converted element.
+- Makes the node notes the description of the converted element.
+- The chapter/scene types can be set by specified icons.
+- The icon specifications can be changed with a configuration file.
+
 ## Requirements
 
 - [Python](https://www.python.org/) version 3.6+.

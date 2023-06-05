@@ -39,7 +39,44 @@ XML files are generated instead. They can be imported into any yWriter project.
 
 ## Conversion rules
 
+- Converts elements on three levels of the novel structure: Parts, chapters, and scenes.
+- Scene status is *Outline*.
+- Converts a set of main characters.
+- Converts a set of minor characters.
+- Converts a set of locations.
+- Converts a set of items.
+- Makes the node label the title of the converted element.
+- Makes the node notes the description of the converted element.
 
+
+### The levels of the mindmap tree
+
+- On the first level, a node represents either a *part* (a chapter beginning a new section), 
+  or a collection of characters, locations, or items.
+- On the second level, a node represents either a *chapter*, or a character/location/item. 
+- On the third level. a node represents a *scene*. 
+
+### The use of special icons
+
+The conversion is controlled by nodes decorated with special icons. The icon specifications 
+can be changed with a configuration file (see below).
+
+
+#### On the first level
+
+- ![Main characters icon](Screenshots/icon_main_characters.png) This icon marks the *Main characters* branch.
+- ![Minor characters icon](Screenshots/icon_minor_characters.png) This icon marks the *Minor characters* branch.
+- ![Locations icon](Screenshots/icon_locations.png) This icon marks the *Locations* branch.
+- ![Items icon](Screenshots/icon_items.png) This icon marks the *Items* branch.
+
+#### On the first, second, or third level
+
+- ![Notes icon](Screenshots/icon_notes.png) This icon makes a node and its children (if any) *Notes* type.
+- ![Todo icon](Screenshots/icon_todo.png) This icon makes a node and its children (if any) *Todo* type.
+
+### Example mindmap
+
+![Example mindmap](Screenshots/icons01.png)
 
 ## Custom configuration
 
@@ -60,7 +97,7 @@ An optional project configuration file named `mm2yw7.ini` can be placed in your 
 
 The mm2yw7 distribution comes with a sample configuration file located in the `sample` subfolder. It contains mm2yw7's default settings and options. This file is also automatically copied to the global configuration folder during installation. You best make a copy and edit it.
 
-- The SETTINGS section mainly refers to icons, i.e. The FreeMind icons that mark the character/location/item branches in the mindmap. If you change them, the program might behave differently than described in the description of the conversion rules. 
+- The SETTINGS section mainly refers to icons, i.e. The FreeMind icons that mark the nodes and branches in the mindmap. If you change them, the program might behave differently than described in the description of the conversion rules. 
 - The OPTIONS section comprises options for regular program execution. 
 - Comment lines begin with a `#` number sign. In the example, they refer to the code line immediately above.
 
