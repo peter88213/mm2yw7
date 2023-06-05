@@ -15,6 +15,7 @@
 - Makes the node notes the description of the converted element.
 - The chapter/scene types can be set by specified icons.
 - The icon specifications can be changed with a configuration file.
+- A template mindmap is included with the distribution (see the *sample* folder).
 
 ## Requirements
 
