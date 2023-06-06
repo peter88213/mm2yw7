@@ -2,10 +2,54 @@
 <YWRITER7>
   <PROJECT>
     <Ver>7</Ver>
+    <Title><![CDATA[Roman]]></Title>
+    <Desc><![CDATA[Mein toller Roman.]]></Desc>
   </PROJECT>
-  <LOCATIONS />
-  <ITEMS />
-  <CHARACTERS />
+  <LOCATIONS>
+    <LOCATION>
+      <ID>1</ID>
+      <Title><![CDATA[Hades]]></Title>
+      <SortOrder>1</SortOrder>
+    </LOCATION>
+    <LOCATION>
+      <ID>2</ID>
+      <Title><![CDATA[Olymp]]></Title>
+      <Desc><![CDATA[Sitz der Götter.]]></Desc>
+      <SortOrder>2</SortOrder>
+    </LOCATION>
+  </LOCATIONS>
+  <ITEMS>
+    <ITEM>
+      <ID>1</ID>
+      <Title><![CDATA[Stab]]></Title>
+      <Desc><![CDATA[Wanderstab mit hübschen Schnitzereien.]]></Desc>
+      <SortOrder>1</SortOrder>
+    </ITEM>
+  </ITEMS>
+  <CHARACTERS>
+    <CHARACTER>
+      <ID>1</ID>
+      <Title><![CDATA[Pyramus]]></Title>
+      <SortOrder>1</SortOrder>
+      <Major>-1</Major>
+    </CHARACTER>
+    <CHARACTER>
+      <ID>2</ID>
+      <Title><![CDATA[Thisbe]]></Title>
+      <SortOrder>2</SortOrder>
+      <Major>-1</Major>
+    </CHARACTER>
+    <CHARACTER>
+      <ID>3</ID>
+      <Title><![CDATA[Der Gärtner]]></Title>
+      <SortOrder>3</SortOrder>
+    </CHARACTER>
+    <CHARACTER>
+      <ID>4</ID>
+      <Title><![CDATA[Der butler]]></Title>
+      <SortOrder>4</SortOrder>
+    </CHARACTER>
+  </CHARACTERS>
   <SCENES>
     <SCENE>
       <ID>1</ID>
@@ -43,6 +87,10 @@
       <SceneContent />
       <WordCount>0</WordCount>
       <LetterCount>0</LetterCount>
+      <Unused>-1</Unused>
+      <Fields>
+        <Field_SceneType>1</Field_SceneType>
+      </Fields>
       <Status>1</Status>
     </SCENE>
     <SCENE>
@@ -52,6 +100,10 @@
       <SceneContent />
       <WordCount>0</WordCount>
       <LetterCount>0</LetterCount>
+      <Unused>-1</Unused>
+      <Fields>
+        <Field_SceneType>2</Field_SceneType>
+      </Fields>
       <Status>1</Status>
     </SCENE>
     <SCENE>
@@ -61,6 +113,10 @@
       <SceneContent />
       <WordCount>0</WordCount>
       <LetterCount>0</LetterCount>
+      <Unused>-1</Unused>
+      <Fields>
+        <Field_SceneType>2</Field_SceneType>
+      </Fields>
       <Status>1</Status>
     </SCENE>
     <SCENE>
@@ -70,6 +126,10 @@
       <SceneContent />
       <WordCount>0</WordCount>
       <LetterCount>0</LetterCount>
+      <Unused>-1</Unused>
+      <Fields>
+        <Field_SceneType>2</Field_SceneType>
+      </Fields>
       <Status>1</Status>
     </SCENE>
     <SCENE>
@@ -79,6 +139,10 @@
       <SceneContent />
       <WordCount>0</WordCount>
       <LetterCount>0</LetterCount>
+      <Unused>-1</Unused>
+      <Fields>
+        <Field_SceneType>2</Field_SceneType>
+      </Fields>
       <Status>1</Status>
     </SCENE>
     <SCENE>
@@ -88,6 +152,10 @@
       <SceneContent />
       <WordCount>0</WordCount>
       <LetterCount>0</LetterCount>
+      <Unused>-1</Unused>
+      <Fields>
+        <Field_SceneType>2</Field_SceneType>
+      </Fields>
       <Status>1</Status>
     </SCENE>
     <SCENE>
@@ -97,6 +165,10 @@
       <SceneContent />
       <WordCount>0</WordCount>
       <LetterCount>0</LetterCount>
+      <Unused>-1</Unused>
+      <Fields>
+        <Field_SceneType>2</Field_SceneType>
+      </Fields>
       <Status>1</Status>
     </SCENE>
   </SCENES>
@@ -137,17 +209,19 @@
       <ID>4</ID>
       <Title><![CDATA[Zweiter Teil]]></Title>
       <Desc><![CDATA[Beschreibung Teil 2]]></Desc>
+      <Unused>-1</Unused>
       <SortOrder>4</SortOrder>
       <SectionStart>-1</SectionStart>
-      <Type>0</Type>
-      <ChapterType>0</ChapterType>
+      <Type>1</Type>
+      <ChapterType>2</ChapterType>
     </CHAPTER>
     <CHAPTER>
       <ID>5</ID>
       <Title><![CDATA[Drittes Kapitel]]></Title>
+      <Unused>-1</Unused>
       <SortOrder>5</SortOrder>
-      <Type>0</Type>
-      <ChapterType>0</ChapterType>
+      <Type>1</Type>
+      <ChapterType>2</ChapterType>
       <Scenes>
         <ScID>6</ScID>
         <ScID>7</ScID>
@@ -157,9 +231,10 @@
     <CHAPTER>
       <ID>6</ID>
       <Title><![CDATA[Viertes Kapitel]]></Title>
+      <Unused>-1</Unused>
       <SortOrder>6</SortOrder>
-      <Type>0</Type>
-      <ChapterType>0</ChapterType>
+      <Type>1</Type>
+      <ChapterType>2</ChapterType>
       <Scenes>
         <ScID>9</ScID>
         <ScID>10</ScID>
@@ -168,24 +243,27 @@
     <CHAPTER>
       <ID>7</ID>
       <Title><![CDATA[Dritter Teil]]></Title>
+      <Unused>-1</Unused>
       <SortOrder>7</SortOrder>
       <SectionStart>-1</SectionStart>
-      <Type>0</Type>
-      <ChapterType>0</ChapterType>
+      <Type>1</Type>
+      <ChapterType>1</ChapterType>
     </CHAPTER>
     <CHAPTER>
       <ID>8</ID>
       <Title><![CDATA[Fünftes kapitel]]></Title>
+      <Unused>-1</Unused>
       <SortOrder>8</SortOrder>
-      <Type>0</Type>
-      <ChapterType>0</ChapterType>
+      <Type>1</Type>
+      <ChapterType>1</ChapterType>
     </CHAPTER>
     <CHAPTER>
       <ID>9</ID>
       <Title><![CDATA[Sechstes Kapitel]]></Title>
+      <Unused>-1</Unused>
       <SortOrder>9</SortOrder>
-      <Type>0</Type>
-      <ChapterType>0</ChapterType>
+      <Type>1</Type>
+      <ChapterType>1</ChapterType>
     </CHAPTER>
   </CHAPTERS>
 </YWRITER7>

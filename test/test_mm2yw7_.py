@@ -10,7 +10,6 @@ import os
 import unittest
 import mm2yw7_
 
-
 # Test environment
 
 # The paths are relative to the "test" directory,
@@ -22,7 +21,9 @@ TEST_EXEC_PATH = TEST_PATH + '/yw7/'
 
 # To be placed in TEST_DATA_PATH:
 NORMAL_YW7 = TEST_DATA_PATH + 'normal.yw7'
-NORMAL_SCAP = TEST_DATA_PATH + 'normal.scap'
+NORMAL_MM = TEST_DATA_PATH + 'normal.mm'
+NORMAL_INI = TEST_DATA_PATH + 'normal.ini'
+OVERWRITE_INI = TEST_DATA_PATH + 'overwrite.ini'
 NORMAL_CHARACTERS_XML = TEST_DATA_PATH + 'normal_Characters.xml'
 NORMAL_LOCATIONS_XML = TEST_DATA_PATH + 'normal_Locations.xml'
 NORMAL_ITEMS_XML = TEST_DATA_PATH + 'normal_Items.xml'
@@ -30,7 +31,7 @@ INI_FILE = 'mm2yw7.ini'
 
 # Test data
 TEST_YW7 = TEST_EXEC_PATH + 'yw7 Sample Project.yw7'
-TEST_SCAP = TEST_EXEC_PATH + 'yw7 Sample Project.scap'
+TEST_MM = TEST_EXEC_PATH + 'yw7 Sample Project.mm'
 TEST_CHARACTERS_XML = TEST_EXEC_PATH + 'yw7 Sample Project_Characters.xml'
 TEST_LOCATIONS_XML = TEST_EXEC_PATH + 'yw7 Sample Project_Locations.xml'
 TEST_ITEMS_XML = TEST_EXEC_PATH + 'yw7 Sample Project_Items.xml'
@@ -47,33 +48,26 @@ def read_file(inputFile):
 
 
 def remove_all_testfiles():
-
     try:
         os.remove(TEST_YW7)
-
     except:
         pass
-
     try:
-        os.remove(TEST_SCAP)
+        os.remove(TEST_MM)
     except:
         pass
-
     try:
         os.remove(TEST_EXEC_PATH + INI_FILE)
     except:
         pass
-
     try:
         os.remove(TEST_CHARACTERS_XML)
     except:
         pass
-
     try:
         os.remove(TEST_LOCATIONS_XML)
     except:
         pass
-
     try:
         os.remove(TEST_ITEMS_XML)
     except:
@@ -84,26 +78,25 @@ class NormalOperation(unittest.TestCase):
     """Test case: Normal operation."""
 
     def setUp(self):
-
         try:
             os.mkdir(TEST_EXEC_PATH)
-
         except:
             pass
-
         remove_all_testfiles()
 
-    def test_scap_to_new_yw(self):
-        copyfile(NORMAL_SCAP, TEST_SCAP)
+    def test_mm_to_new_yw(self):
+        copyfile(NORMAL_MM, TEST_MM)
+        copyfile(NORMAL_INI, TEST_EXEC_PATH + INI_FILE)
         os.chdir(TEST_EXEC_PATH)
-        mm2yw7_.run(TEST_SCAP, silentMode=True)
+        mm2yw7_.run(TEST_MM, silentMode=True)
         self.assertEqual(read_file(TEST_YW7), read_file(NORMAL_YW7))
 
-    def test_scap_to_data(self):
-        copyfile(NORMAL_SCAP, TEST_SCAP)
+    def test_mm_to_data(self):
+        copyfile(NORMAL_MM, TEST_MM)
         copyfile(NORMAL_YW7, TEST_YW7)
+        copyfile(OVERWRITE_INI, TEST_EXEC_PATH + INI_FILE)
         os.chdir(TEST_EXEC_PATH)
-        mm2yw7_.run(TEST_SCAP, silentMode=True)
+        mm2yw7_.run(TEST_MM, silentMode=True)
         self.assertEqual(read_file(TEST_CHARACTERS_XML), read_file(NORMAL_CHARACTERS_XML))
         self.assertEqual(read_file(TEST_LOCATIONS_XML), read_file(NORMAL_LOCATIONS_XML))
         self.assertEqual(read_file(TEST_ITEMS_XML), read_file(NORMAL_ITEMS_XML))

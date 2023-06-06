@@ -4,14 +4,14 @@
 
 ## Changelog
 
-### v0.4.1 Alpha
+### v0.4.1
 
 - Use a local copy of the PyWriter library.
 - Refactor the code.
 
 Based on PyWriter v12.12.0
 
-### v0.4.0 Alpha
+### v0.4.0
 
 - Make "normal" parts optional.
 - Change the Characters node icon.
@@ -20,7 +20,7 @@ Based on PyWriter v12.12.0
 
 Based on PyWriter v12.12.0
 
-### v0.3.0 Alpha
+### v0.3.0
 
 - Read HTML formatted node labels as titles.
 - Read notes as descriptions.
@@ -29,7 +29,7 @@ Based on PyWriter v12.12.0
 
 Based on PyWriter v12.12.0
 
-### v0.2.0 Alpha
+### v0.2.0
 
 - Create XML data files on demand.
 - Update documentation.
@@ -37,7 +37,7 @@ Based on PyWriter v12.12.0
 
 Based on PyWriter v12.12.0
 
-### v0.1.0 Alpha
+### v0.1.0
 
 - Import parts, chapters, scenes, characters, locations, and items without descriptions.
 

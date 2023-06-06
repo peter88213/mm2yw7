@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LOCATIONS>
+    <LOCATION>
+      <ID>1</ID>
+      <Title><![CDATA[Hades]]></Title>
+      <SortOrder>1</SortOrder>
+    </LOCATION>
+    <LOCATION>
+      <ID>2</ID>
+      <Title><![CDATA[Olymp]]></Title>
+      <Desc><![CDATA[Sitz der Götter.]]></Desc>
+      <SortOrder>2</SortOrder>
+    </LOCATION>
+  </LOCATIONS>
+  
