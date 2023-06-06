@@ -4,6 +4,12 @@
 
 ## Changelog
 
+### v0.4.2
+
+- Fix a bug where error messages are not displayed.
+
+Based on PyWriter v12.12.0
+
 ### v0.4.1
 
 - Use a local copy of the PyWriter library.

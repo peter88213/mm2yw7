@@ -32,7 +32,7 @@ class MmConverter(YwCnvUi):
         self.newFile = None
 
         if not os.path.isfile(sourcePath):
-            self.ui.set_info_how(f'{ERROR}File "{norm_path(sourcePath)}" not found.')
+            self.ui.set_info_how(f'!File "{norm_path(sourcePath)}" not found.')
             return
 
         fileName, fileExtension = os.path.splitext(sourcePath)
@@ -67,4 +67,4 @@ class MmConverter(YwCnvUi):
             finally:
                 self.ui.set_info_how(message)
         else:
-            self.ui.set_info_how(f'{ERROR}File type of "{norm_path(sourcePath)}" not supported.')
+            self.ui.set_info_how(f'!File type of "{norm_path(sourcePath)}" not supported.')

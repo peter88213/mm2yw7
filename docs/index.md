@@ -24,9 +24,9 @@
 
 ## Download and install
 
-[Download the latest release (version 0.4.1)](https://raw.githubusercontent.com/peter88213/mm2yw7/main/dist/mm2yw7_v0.4.1.zip)
+[Download the latest release (version 0.4.2)](https://raw.githubusercontent.com/peter88213/mm2yw7/main/dist/mm2yw7_v0.4.2.zip)
 
-- Unzip the downloaded zipfile "mm2yw7_v0.4.1.zip" into a new folder.
+- Unzip the downloaded zipfile "mm2yw7_v0.4.2.zip" into a new folder.
 - Move into this new folder and launch **setup.pyw**. This installs the script for the local user.
 - Create a shortcut on the desktop when asked.
 - Open "README.md" for usage instructions.
