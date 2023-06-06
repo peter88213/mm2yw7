@@ -61,7 +61,7 @@ class MmFile(File):
         try:
             self._tree = ET.parse(self.filePath)
         except:
-            return f'{ERROR}Can not process "{norm_path(self.filePath)}".'
+            return f'!Can not process "{norm_path(self.filePath)}".'
 
         root = self._tree.getroot()
         xmlNovel = root.find('node')

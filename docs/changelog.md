@@ -4,9 +4,15 @@
 
 ## Changelog
 
+### v0.4.3
+
+- Fix a bug in the messaging system.
+
+Based on PyWriter v12.12.0
+
 ### v0.4.2
 
-- Fix a bug where error messages are not displayed.
+- Fix a bug in the messaging system.
 
 Based on PyWriter v12.12.0
 
