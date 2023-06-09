@@ -1,4 +1,4 @@
-""" Python unit tests for the mm2yw7 project.
+""" Regression test for the mm2yw7 project.
 
 Test suite for mm2yw7.pyw.
 
