@@ -1,7 +1,6 @@
-""" Regression test for the mm2yw7 project.
+"""Regression test for the mm2yw7 project.
 
-Test suite for mm2yw7.pyw.
-
+Copyright (c) 2023 Peter Triesberger
 For further information see https://github.com/peter88213/mm2yw7
 Published under the MIT License (https://opensource.org/licenses/mit-license.php)
 """
