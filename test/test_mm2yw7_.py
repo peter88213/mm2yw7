@@ -9,6 +9,8 @@ import os
 import unittest
 import mm2yw7_
 
+UPDATE = False
+
 # Test environment
 
 # The paths are relative to the "test" directory,
@@ -88,6 +90,8 @@ class NormalOperation(unittest.TestCase):
         copyfile(NORMAL_INI, TEST_EXEC_PATH + INI_FILE)
         os.chdir(TEST_EXEC_PATH)
         mm2yw7_.run(TEST_MM, silentMode=True)
+        if UPDATE:
+            copyfile(TEST_YW7, NORMAL_YW7)
         self.assertEqual(read_file(TEST_YW7), read_file(NORMAL_YW7))
 
     def test_mm_to_data(self):
@@ -96,6 +100,10 @@ class NormalOperation(unittest.TestCase):
         copyfile(OVERWRITE_INI, TEST_EXEC_PATH + INI_FILE)
         os.chdir(TEST_EXEC_PATH)
         mm2yw7_.run(TEST_MM, silentMode=True)
+        if UPDATE:
+            copyfile(TEST_CHARACTERS_XML, NORMAL_CHARACTERS_XML)
+            copyfile(TEST_LOCATIONS_XML, NORMAL_LOCATIONS_XML)
+            copyfile(TEST_ITEMS_XML, NORMAL_ITEMS_XML)
         self.assertEqual(read_file(TEST_CHARACTERS_XML), read_file(NORMAL_CHARACTERS_XML))
         self.assertEqual(read_file(TEST_LOCATIONS_XML), read_file(NORMAL_LOCATIONS_XML))
         self.assertEqual(read_file(TEST_ITEMS_XML), read_file(NORMAL_ITEMS_XML))

@@ -4,6 +4,13 @@
 
 ## Changelog
 
+### Version 1.0.0
+
+- Reading .yw7 files created with the iOS yWriter version.
+- Refactor for future Python versions.
+
+Based on PyWriter version 12.19.5
+
 ### v0.4.3
 
 - Fix a bug in the messaging system.

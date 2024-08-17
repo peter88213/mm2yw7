@@ -40,12 +40,40 @@ class Yw7File(File):
     """
     DESCRIPTION = _('yWriter 7 project')
     EXTENSION = '.yw7'
-    _CDATA_TAGS = ['Title', 'AuthorName', 'Bio', 'Desc',
-                   'FieldTitle1', 'FieldTitle2', 'FieldTitle3',
-                   'FieldTitle4', 'LaTeXHeaderFile', 'Tags',
-                   'AKA', 'ImageFile', 'FullName', 'Goals',
-                   'Notes', 'RTFFile', 'SceneContent',
-                   'Outcome', 'Goal', 'Conflict']
+    _CDATA_TAGS = [
+        'Title',
+        'AuthorName',
+        'Bio',
+        'Desc',
+        'FieldTitle1',
+        'FieldTitle2',
+        'FieldTitle3',
+        'FieldTitle4',
+        'LaTeXHeaderFile',
+        'Tags',
+        'AKA',
+        'ImageFile',
+        'FullName',
+        'Goals',
+        'Notes',
+        'RTFFile',
+        'SceneContent',
+        'Outcome',
+        'Goal',
+        'Conflict'
+        'Field_ChapterHeadingPrefix',
+        'Field_ChapterHeadingSuffix',
+        'Field_PartHeadingPrefix',
+        'Field_PartHeadingSuffix',
+        'Field_CustomGoal',
+        'Field_CustomConflict',
+        'Field_CustomOutcome',
+        'Field_CustomChrBio',
+        'Field_CustomChrGoals',
+        'Field_ArcDefinition',
+        'Field_SceneArcs',
+        'Field_CustomAR',
+        ]
     # Names of xml elements containing CDATA.
     # ElementTree.write omits CDATA tags, so they have to be inserted afterwards.
 
@@ -55,7 +83,18 @@ class Yw7File(File):
         ]
     SCN_KWVAR = [
         'Field_SceneArcs',
-        'Field_SceneStyle',
+        'Field_SceneMode',
+        ]
+    CRT_KWVAR = [
+        'Field_Link',
+        'Field_BirthDate',
+        'Field_DeathDate',
+        ]
+    LOC_KWVAR = [
+        'Field_Link',
+        ]
+    ITM_KWVAR = [
+        'Field_Link',
         ]
 
     def __init__(self, filePath, **kwargs):
@@ -100,11 +139,23 @@ class Yw7File(File):
         if self.is_locked():
             raise Error(f'{_("yWriter seems to be open. Please close first")}.')
         try:
-            self.tree = ET.parse(self.filePath)
+            try:
+                self.tree = ET.parse(self.filePath)
+                root = self.tree.getroot()
+            except:
+                # yw7 file may be UTF-16 encoded, with a wrong XML header (yWriter for iOS)
+                with open(self.filePath, 'r', encoding='utf-16') as f:
+                    xmlText = f.read()
+                root = ET.fromstring(xmlText)
+                xmlText = None
+                # saving memory
+                self.tree = ET.ElementTree(root)
         except:
-            raise Error(f'{_("Can not process file")}: "{norm_path(self.filePath)}".')
+            try:
+                self.tree = ET.parse(self.filePath)
+            except Exception as ex:
+                raise Error(f'{_("Can not process file")} - {str(ex)}')
 
-        root = self.tree.getroot()
         self._read_project(root)
         self._read_locations(root)
         self._read_items(root)
@@ -118,7 +169,11 @@ class Yw7File(File):
         #--- Set custom instance variables.
         for scId in self.novel.scenes:
             self.novel.scenes[scId].scnArcs = self.novel.scenes[scId].kwVar.get('Field_SceneArcs', None)
-            self.novel.scenes[scId].scnStyle = self.novel.scenes[scId].kwVar.get('Field_SceneStyle', None)
+            scnMode = self.novel.scenes[scId].kwVar.get('Field_SceneMode', None)
+            try:
+                self.novel.scenes[scId].scnMode = int(scnMode)
+            except:
+                self.novel.scenes[scId].scnMode = None
 
     def write(self):
         """Write instance variables to the yWriter xml file.
@@ -138,9 +193,12 @@ class Yw7File(File):
         for scId in self.novel.scenes:
             if self.novel.scenes[scId].scnArcs is not None:
                 self.novel.scenes[scId].kwVar['Field_SceneArcs'] = self.novel.scenes[scId].scnArcs
-            if self.novel.scenes[scId].scnStyle is not None:
-                self.novel.scenes[scId].kwVar['Field_SceneStyle'] = self.novel.scenes[scId].scnStyle
-
+            if self.novel.scenes[scId].scnMode is not None:
+                if self.novel.scenes[scId].scnMode == 0:
+                    self.novel.scenes[scId].kwVar['Field_SceneMode'] = None
+                else:
+                    self.novel.scenes[scId].kwVar['Field_SceneMode'] = str(self.novel.scenes[scId].scnMode)
+            self.novel.scenes[scId].kwVar['Field_SceneStyle'] = None
         self._build_element_tree()
         self._write_element_tree(self)
         self._postprocess_xml_file(self.filePath)
@@ -182,12 +240,6 @@ class Yw7File(File):
 
             i = 1
             i = set_element(xmlScene, 'Title', prjScn.title, i)
-
-            if xmlScene.find('BelongsToChID') is None:
-                for chId in self.novel.chapters:
-                    if scId in self.novel.chapters[chId].srtScenes:
-                        ET.SubElement(xmlScene, 'BelongsToChID').text = chId
-                        break
 
             if prjScn.desc is not None:
                 try:
@@ -250,10 +302,10 @@ class Yw7File(File):
                 ET.SubElement(xmlSceneFields, 'Field_SceneType').text = ySceneType
 
             #--- Export when RTF.
-            if self.novel.scenes[scId].doNotExport is not None:
+            if prjScn.doNotExport is not None:
                 xmlExportCondSpecific = xmlScene.find('ExportCondSpecific')
                 xmlExportWhenRtf = xmlScene.find('ExportWhenRTF')
-                if self.novel.scenes[scId].doNotExport:
+                if prjScn.doNotExport:
                     if xmlExportCondSpecific is None:
                         xmlExportCondSpecific = ET.SubElement(xmlScene, 'ExportCondSpecific')
                     if xmlExportWhenRtf is not None:
@@ -265,13 +317,14 @@ class Yw7File(File):
 
             #--- Write scene custom fields.
             for field in self.SCN_KWVAR:
-                if self.novel.scenes[scId].kwVar.get(field, None):
+                if prjScn.kwVar.get(field, None):
                     if xmlSceneFields is None:
                         xmlSceneFields = ET.SubElement(xmlScene, 'Fields')
+                    fieldEntry = self._convert_from_yw(prjScn.kwVar[field])
                     try:
-                        xmlSceneFields.find(field).text = self.novel.scenes[scId].kwVar[field]
+                        xmlSceneFields.find(field).text = fieldEntry
                     except(AttributeError):
-                        ET.SubElement(xmlSceneFields, field).text = self.novel.scenes[scId].kwVar[field]
+                        ET.SubElement(xmlSceneFields, field).text = fieldEntry
                 elif xmlSceneFields is not None:
                     try:
                         xmlSceneFields.remove(xmlSceneFields.find(field))
@@ -449,81 +502,35 @@ class Yw7File(File):
                     if prjScn.image:
                         ET.SubElement(xmlScene, 'ImageFile').text = prjScn.image
 
-            #--- Characters/xmlLocations/xmlItems
-            if prjScn.characters is not None:
-                xmlCharacters = xmlScene.find('Characters')
-                try:
-                    for oldCrId in xmlCharacters.findall('CharID'):
-                        xmlCharacters.remove(oldCrId)
-                except(AttributeError):
-                    xmlCharacters = ET.SubElement(xmlScene, 'Characters')
+            #--- Characters/Locations/Items
+            try:
+                xmlScene.remove(xmlScene.find('Characters'))
+            except:
+                pass
+            if prjScn.characters:
+                xmlCharacters = ET.SubElement(xmlScene, 'Characters')
                 for crId in prjScn.characters:
                     ET.SubElement(xmlCharacters, 'CharID').text = crId
 
-            if prjScn.locations is not None:
-                xmlLocations = xmlScene.find('Locations')
-                try:
-                    for oldLcId in xmlLocations.findall('LocID'):
-                        xmlLocations.remove(oldLcId)
-                except(AttributeError):
-                    xmlLocations = ET.SubElement(xmlScene, 'Locations')
+            try:
+                xmlScene.remove(xmlScene.find('Locations'))
+            except:
+                pass
+            if prjScn.locations:
+                xmlLocations = ET.SubElement(xmlScene, 'Locations')
                 for lcId in prjScn.locations:
                     ET.SubElement(xmlLocations, 'LocID').text = lcId
 
-            if prjScn.items is not None:
-                xmlItems = xmlScene.find('Items')
-                try:
-                    for oldItId in xmlItems.findall('ItemID'):
-                        xmlItems.remove(oldItId)
-                except(AttributeError):
-                    xmlItems = ET.SubElement(xmlScene, 'Items')
-                for itId in prjScn.items:
-                    ET.SubElement(xmlItems, 'ItemID').text = itId
+            try:
+                xmlScene.remove(xmlScene.find('Items'))
+            except:
+                pass
+            if prjScn.items:
+                xmlItems = ET.SubElement(xmlScene, 'Items')
+                for ItId in prjScn.items:
+                    ET.SubElement(xmlItems, 'ItmID').text = ItId
 
-            """ Removing empty characters/locations/items entries
-            
-            if prjScn.characters is not None:
-                characters = xmlScene.find('Characters')
-                if characters is not None:
-                    for oldCrId in characters.findall('CharID'):
-                        characters.remove(oldCrId)
-                if prjScn.characters:
-                    if characters is None:
-                        characters = ET.SubElement(xmlScene, 'Characters')
-                    for crId in prjScn.characters:
-                        ET.SubElement(characters, 'CharID').text = crId
-                elif characters is not None:
-                    xmlScene.remove(xmlScene.find('Characters'))
-
-            if prjScn.locations is not None:
-                locations = xmlScene.find('Locations')
-                if locations is not None:
-                    for oldLcId in locations.findall('LocID'):
-                        locations.remove(oldLcId)
-                if prjScn.locations:
-                    if locations is None:
-                        locations = ET.SubElement(xmlScene, 'Locations')
-                    for lcId in prjScn.locations:
-                        ET.SubElement(locations, 'LocID').text = lcId
-                elif locations is not None:
-                    xmlScene.remove(xmlScene.find('Locations'))
-
-            if prjScn.items is not None:
-                items = xmlScene.find('Items')
-                if items is not None:
-                    for oldItId in items.findall('ItemID'):
-                        items.remove(oldItId)
-                if prjScn.items:
-                    if items is None:
-                        items = ET.SubElement(xmlScene, 'Items')
-                    for itId in prjScn.items:
-                        ET.SubElement(items, 'ItemID').text = itId
-                elif items is not None:
-                    xmlScene.remove(xmlScene.find('Items'))
-            
-            """
-
-        def build_chapter_subtree(xmlChapter, prjChp, sortOrder):
+        def build_chapter_subtree(xmlChapter, prjChp):
             # This is how yWriter 7.1.3.0 writes the chapter type:
             #
             # Type   |<Unused>|<Type>|<ChapterType>|chType
@@ -556,8 +563,10 @@ class Yw7File(File):
                 xmlChapter.remove(xmlChapter.find('Unused'))
             if xmlChapter.find('Unused') is not None:
                 i += 1
-
-            i = set_element(xmlChapter, 'SortOrder', str(sortOrder), i)
+            try:
+                xmlChapter.remove(xmlChapter.find('SortOrder'))
+            except:
+                pass
 
             #--- Write chapter fields.
             xmlChapterFields = xmlChapter.find('Fields')
@@ -604,10 +613,11 @@ class Yw7File(File):
                     if xmlChapterFields is None:
                         xmlChapterFields = ET.Element('Fields')
                         xmlChapter.insert(i, xmlChapterFields)
+                    fieldEntry = self._convert_from_yw(prjChp.kwVar[field])
                     try:
-                        xmlChapterFields.find(field).text = prjChp.kwVar[field]
+                        xmlChapterFields.find(field).text = fieldEntry
                     except(AttributeError):
-                        ET.SubElement(xmlChapterFields, field).text = prjChp.kwVar[field]
+                        ET.SubElement(xmlChapterFields, field).text = fieldEntry
                 elif xmlChapterFields is not None:
                     try:
                         xmlChapterFields.remove(xmlChapterFields.find(field))
@@ -631,19 +641,16 @@ class Yw7File(File):
 
             #--- Rebuild the chapter's scene list.
             xmlScnList = xmlChapter.find('Scenes')
-
-            # Remove the Scenes section.
             if xmlScnList is not None:
                 xmlChapter.remove(xmlScnList)
 
             # Rebuild the Scenes section in a modified sort order.
             if prjChp.srtScenes:
-                xmlScnList = ET.Element('Scenes')
-                xmlChapter.insert(i, xmlScnList)
+                xmlScnList = ET.SubElement(xmlChapter, 'Scenes')
                 for scId in prjChp.srtScenes:
                     ET.SubElement(xmlScnList, 'ScID').text = scId
 
-        def build_location_subtree(xmlLoc, prjLoc, sortOrder):
+        def build_location_subtree(xmlLoc, prjLoc):
             if prjLoc.title is not None:
                 ET.SubElement(xmlLoc, 'Title').text = prjLoc.title
 
@@ -659,32 +666,33 @@ class Yw7File(File):
             if prjLoc.tags is not None:
                 ET.SubElement(xmlLoc, 'Tags').text = list_to_string(prjLoc.tags)
 
-            ET.SubElement(xmlLoc, 'SortOrder').text = str(sortOrder)
-
             #--- Write location custom fields.
             xmlLocationFields = xmlLoc.find('Fields')
             for field in self.LOC_KWVAR:
-                if self.novel.locations[lcId].kwVar.get(field, None):
+                if prjLoc.kwVar.get(field, None):
                     if xmlLocationFields is None:
                         xmlLocationFields = ET.SubElement(xmlLoc, 'Fields')
+                    fieldEntry = self._convert_from_yw(prjLoc.kwVar[field])
                     try:
-                        xmlLocationFields.find(field).text = self.novel.locations[lcId].kwVar[field]
+                        xmlLocationFields.find(field).text = fieldEntry
                     except(AttributeError):
-                        ET.SubElement(xmlLocationFields, field).text = self.novel.locations[lcId].kwVar[field]
+                        ET.SubElement(xmlLocationFields, field).text = fieldEntry
                 elif xmlLocationFields is not None:
                     try:
                         xmlLocationFields.remove(xmlLocationFields.find(field))
                     except:
                         pass
+            try:
+                xmlLoc.remove(xmlLoc.find('SortOrder'))
+            except:
+                pass
 
-        def build_prjNote_subtree(xmlProjectnote, projectNote, sortOrder):
+        def build_prjNote_subtree(xmlProjectnote, projectNote):
             if projectNote.title is not None:
                 ET.SubElement(xmlProjectnote, 'Title').text = projectNote.title
 
             if projectNote.desc is not None:
                 ET.SubElement(xmlProjectnote, 'Desc').text = projectNote.desc
-
-            ET.SubElement(xmlProjectnote, 'SortOrder').text = str(sortOrder)
 
         def add_projectvariable(title, desc, tags):
             # Note:
@@ -698,7 +706,7 @@ class Yw7File(File):
             ET.SubElement(xmlProjectvar, 'Desc').text = desc
             ET.SubElement(xmlProjectvar, 'Tags').text = tags
 
-        def build_item_subtree(xmlItm, prjItm, sortOrder):
+        def build_item_subtree(xmlItm, prjItm):
             if prjItm.title is not None:
                 ET.SubElement(xmlItm, 'Title').text = prjItm.title
 
@@ -714,25 +722,28 @@ class Yw7File(File):
             if prjItm.tags is not None:
                 ET.SubElement(xmlItm, 'Tags').text = list_to_string(prjItm.tags)
 
-            ET.SubElement(xmlItm, 'SortOrder').text = str(sortOrder)
-
             #--- Write item custom fields.
             xmlItemFields = xmlItm.find('Fields')
             for field in self.ITM_KWVAR:
-                if self.novel.items[itId].kwVar.get(field, None):
+                if prjItm.kwVar.get(field, None):
                     if xmlItemFields is None:
                         xmlItemFields = ET.SubElement(xmlItm, 'Fields')
+                    fieldEntry = self._convert_from_yw(prjItm.kwVar[field])
                     try:
-                        xmlItemFields.find(field).text = self.novel.items[itId].kwVar[field]
+                        xmlItemFields.find(field).text = fieldEntry
                     except(AttributeError):
-                        ET.SubElement(xmlItemFields, field).text = self.novel.items[itId].kwVar[field]
+                        ET.SubElement(xmlItemFields, field).text = fieldEntry
                 elif xmlItemFields is not None:
                     try:
                         xmlItemFields.remove(xmlItemFields.find(field))
                     except:
                         pass
+            try:
+                xmlItm.remove(xmlItm.find('SortOrder'))
+            except:
+                pass
 
-        def build_character_subtree(xmlCrt, prjCrt, sortOrder):
+        def build_character_subtree(xmlCrt, prjCrt):
             if prjCrt.title is not None:
                 ET.SubElement(xmlCrt, 'Title').text = prjCrt.title
 
@@ -741,8 +752,6 @@ class Yw7File(File):
 
             if prjCrt.image is not None:
                 ET.SubElement(xmlCrt, 'ImageFile').text = prjCrt.image
-
-            ET.SubElement(xmlCrt, 'SortOrder').text = str(sortOrder)
 
             if prjCrt.notes is not None:
                 ET.SubElement(xmlCrt, 'Notes').text = prjCrt.notes
@@ -768,18 +777,23 @@ class Yw7File(File):
             #--- Write character custom fields.
             xmlCharacterFields = xmlCrt.find('Fields')
             for field in self.CRT_KWVAR:
-                if self.novel.characters[crId].kwVar.get(field, None):
+                if prjCrt.kwVar.get(field, None):
                     if xmlCharacterFields is None:
                         xmlCharacterFields = ET.SubElement(xmlCrt, 'Fields')
+                    fieldEntry = self._convert_from_yw(prjCrt.kwVar[field])
                     try:
-                        xmlCharacterFields.find(field).text = self.novel.characters[crId].kwVar[field]
+                        xmlCharacterFields.find(field).text = fieldEntry
                     except(AttributeError):
-                        ET.SubElement(xmlCharacterFields, field).text = self.novel.characters[crId].kwVar[field]
+                        ET.SubElement(xmlCharacterFields, field).text = fieldEntry
                 elif xmlCharacterFields is not None:
                     try:
                         xmlCharacterFields.remove(xmlCharacterFields.find(field))
                     except:
                         pass
+            try:
+                xmlCrt.remove(xmlCrt.find('SortOrder'))
+            except:
+                pass
 
         def build_project_subtree(xmlProject):
             VER = '7'
@@ -861,15 +875,24 @@ class Yw7File(File):
                 if setting:
                     if xmlProjectFields is None:
                         xmlProjectFields = ET.SubElement(xmlProject, 'Fields')
+                    fieldEntry = self._convert_from_yw(setting)
                     try:
-                        xmlProjectFields.find(field).text = setting
+                        xmlProjectFields.find(field).text = fieldEntry
                     except(AttributeError):
-                        ET.SubElement(xmlProjectFields, field).text = setting
+                        ET.SubElement(xmlProjectFields, field).text = fieldEntry
                 else:
                     try:
                         xmlProjectFields.remove(xmlProjectFields.find(field))
                     except:
                         pass
+            try:
+                xmlProject.remove(xmlProject.find('SavedWith'))
+            except:
+                pass
+            try:
+                xmlProject.remove(xmlProject.find('SavedOn'))
+            except:
+                pass
 
         TAG = 'YWRITER7'
         xmlNewScenes = {}
@@ -899,7 +922,7 @@ class Yw7File(File):
 
         build_project_subtree(xmlProject)
 
-        #--- Process xmlLocations.
+        #--- Process Locations.
 
         # Remove LOCATION entries in order to rewrite
         # the LOCATIONS section in a modified sort order.
@@ -907,14 +930,12 @@ class Yw7File(File):
             xmlLocations.remove(xmlLoc)
 
         # Add the new XML location subtrees to the project tree.
-        sortOrder = 0
         for lcId in self.novel.srtLocations:
-            sortOrder += 1
             xmlLoc = ET.SubElement(xmlLocations, 'LOCATION')
             ET.SubElement(xmlLoc, 'ID').text = lcId
-            build_location_subtree(xmlLoc, self.novel.locations[lcId], sortOrder)
+            build_location_subtree(xmlLoc, self.novel.locations[lcId])
 
-        #--- Process xmlItems.
+        #--- Process Items.
 
         # Remove ITEM entries in order to rewrite
         # the ITEMS section in a modified sort order.
@@ -922,14 +943,12 @@ class Yw7File(File):
             xmlItems.remove(xmlItm)
 
         # Add the new XML item subtrees to the project tree.
-        sortOrder = 0
         for itId in self.novel.srtItems:
-            sortOrder += 1
             xmlItm = ET.SubElement(xmlItems, 'ITEM')
             ET.SubElement(xmlItm, 'ID').text = itId
-            build_item_subtree(xmlItm, self.novel.items[itId], sortOrder)
+            build_item_subtree(xmlItm, self.novel.items[itId])
 
-        #--- Process xmlCharacters.
+        #--- Process Characters.
 
         # Remove CHARACTER entries in order to rewrite
         # the CHARACTERS section in a modified sort order.
@@ -937,12 +956,10 @@ class Yw7File(File):
             xmlCharacters.remove(xmlCrt)
 
         # Add the new XML character subtrees to the project tree.
-        sortOrder = 0
         for crId in self.novel.srtCharacters:
-            sortOrder += 1
             xmlCrt = ET.SubElement(xmlCharacters, 'CHARACTER')
             ET.SubElement(xmlCrt, 'ID').text = crId
-            build_character_subtree(xmlCrt, self.novel.characters[crId], sortOrder)
+            build_character_subtree(xmlCrt, self.novel.characters[crId])
 
         #--- Process project notes.
 
@@ -957,12 +974,10 @@ class Yw7File(File):
             xmlProjectnotes = ET.SubElement(root, 'PROJECTNOTES')
         if self.novel.srtPrjNotes:
             # Add the new XML prjNote subtrees to the project tree.
-            sortOrder = 0
             for pnId in self.novel.srtPrjNotes:
-                sortOrder += 1
                 xmlProjectnote = ET.SubElement(xmlProjectnotes, 'PROJECTNOTE')
                 ET.SubElement(xmlProjectnote, 'ID').text = pnId
-                build_prjNote_subtree(xmlProjectnote, self.novel.projectNotes[pnId], sortOrder)
+                build_prjNote_subtree(xmlProjectnote, self.novel.projectNotes[pnId])
 
         #--- Process project variables.
         xmlProjectvars = root.find('PROJECTVARS')
@@ -1044,13 +1059,11 @@ class Yw7File(File):
             xmlChapters.remove(xmlChapter)
 
         # Add the new XML chapter subtrees to the project tree.
-        sortOrder = 0
         for chId in self.novel.srtChapters:
-            sortOrder += 1
             if not chId in xmlNewChapters:
                 xmlNewChapters[chId] = ET.Element('CHAPTER')
                 ET.SubElement(xmlNewChapters[chId], 'ID').text = chId
-            build_chapter_subtree(xmlNewChapters[chId], self.novel.chapters[chId], sortOrder)
+            build_chapter_subtree(xmlNewChapters[chId], self.novel.chapters[chId])
             xmlChapters.append(xmlNewChapters[chId])
 
         # Modify the scene contents of an existing xml element tree.
@@ -1058,18 +1071,54 @@ class Yw7File(File):
             scId = xmlScene.find('ID').text
             if self.novel.scenes[scId].sceneContent is not None:
                 xmlScene.find('SceneContent').text = self.novel.scenes[scId].sceneContent
-                xmlScene.find('WordCount').text = str(self.novel.scenes[scId].wordCount)
-                xmlScene.find('LetterCount').text = str(self.novel.scenes[scId].letterCount)
+            try:
+                xmlScene.remove(xmlScene.find('WordCount'))
+            except:
+                pass
+            try:
+                xmlScene.remove(xmlScene.find('LetterCount'))
+            except:
+                pass
             try:
                 xmlScene.remove(xmlScene.find('RTFFile'))
+            except:
+                pass
+            try:
+                xmlScene.remove(xmlScene.find('BelongsToChID'))
             except:
                 pass
 
         indent(root)
         self.tree = ET.ElementTree(root)
 
+    def _convert_from_yw(self, text, quick=False):
+        """Return text without markup, converted to target format.
+        
+        Positional arguments:
+            text -- string to convert.
+        
+        Optional arguments:
+            quick: bool -- if True, apply a conversion mode for one-liners without formatting.
+        
+        Overrides the superclass method.
+        """
+        if text:
+            # Apply XML predefined entities.
+            XML_REPLACEMENTS = [
+                ('&', '&amp;'),
+                ('>', '&gt;'),
+                ('<', '&lt;'),
+                ("'", '&apos;'),
+                ('"', '&quot;'),
+                ]
+            for yw, xm in XML_REPLACEMENTS:
+                text = text.replace(yw, xm)
+        else:
+            text = ''
+        return text
+
     def _postprocess_xml_file(self, filePath):
-        '''Postprocess an xml file created by ElementTree.
+        """Postprocess an xml file created by ElementTree.
         
         Positional argument:
             filePath: str -- path to xml file.
@@ -1080,15 +1129,15 @@ class Yw7File(File):
         
         Note: The path is given as an argument rather than using self.filePath. 
         So this routine can be used for yWriter-generated xml files other than .yw7 as well. 
-        '''
+        """
         with open(filePath, 'r', encoding='utf-8') as f:
             text = f.read()
         lines = text.split('\n')
         newlines = ['<?xml version="1.0" encoding="utf-8"?>']
         for line in lines:
             for tag in self._CDATA_TAGS:
-                line = re.sub(f'\<{tag}\>', f'<{tag}><![CDATA[', line)
-                line = re.sub(f'\<\/{tag}\>', f']]></{tag}>', line)
+                line = re.sub(fr'\<{tag}\>', f'<{tag}><![CDATA[', line)
+                line = re.sub(fr'\<\/{tag}\>', f']]></{tag}>', line)
             newlines.append(line)
         text = '\n'.join(newlines)
         text = text.replace('[CDATA[ \n', '[CDATA[')
