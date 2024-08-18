@@ -4,6 +4,12 @@
 
 ## Changelog
 
+### Version 1.0.1
+
+- Strip illegal characters before parsing yw7 input.
+
+Based on PyWriter version 12.19.6
+
 ### Version 1.0.0
 
 - Reading .yw7 files created with the iOS yWriter version.
